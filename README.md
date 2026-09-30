@@ -1,5 +1,10 @@
 # tree-sitter-mapfile
 
+> [!NOTE]
+> This project is AI-written. Claude (Opus 5.5) wrote the grammar, queries,
+> tests and docs in Claude Code, and I tested the result in Helix. It's a
+> personal project with no guarantees. Issues and PRs are welcome.
+
 A [tree-sitter](https://tree-sitter.github.io/) grammar for MapServer
 [Mapfiles](https://mapserver.org/mapfile/), mainly for syntax highlighting in
 [Helix](https://helix-editor.com/). It is ported from the Lark grammar in
@@ -11,14 +16,9 @@ mapfiles (a lone `LAYER`, several `CLASS` blocks, included fragments). It parses
 462 of the 464 sample `.map` files in mappyfile's test suite without errors. The
 other two are broken on purpose.
 
-The grammar is looser than mappyfile's on purpose. It doesn't check which keys
-are allowed in which block. That's validation, not highlighting.
-
-> [!NOTE]
-> **This project is AI-written.** The grammar, queries, tests and this README
-> were written by Claude (Opus 5.5) in Claude Code, and tested in Helix by me.
-> It's a personal project with no guarantees. Issues and PRs are welcome, but
-> expect slow replies.
+Because the goal is highlighting, the grammar is more permissive than
+mappyfile's: it doesn't check which keys belong in which block. For validating a mapfile, use
+mappyfile itself.
 
 ## Helix
 
