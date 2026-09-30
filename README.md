@@ -79,8 +79,8 @@ grammar = "mapfile"
 
 [[grammar]]
 name = "mapfile"
-# v0.1.0
-source = { git = "https://github.com/lnus/tree-sitter-mapfile", rev = "2d8c0b59c9cc870d05420f9c76cea7c02e61632b" }
+# v0.1.1
+source = { git = "https://github.com/lnus/tree-sitter-mapfile", rev = "0fb0416164a5e4ee72b61db3c2ac0f3b8d131948" }
 ```
 
 Then fetch and build the grammar, and link the queries from the fetched source
