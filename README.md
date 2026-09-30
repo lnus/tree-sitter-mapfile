@@ -59,17 +59,24 @@ grammar = "mapfile"
 
 [[grammar]]
 name = "mapfile"
-source = { path = "/absolute/path/to/tree-sitter-mapfile" }
+# v0.1.0
+source = { git = "https://github.com/lnus/tree-sitter-mapfile", rev = "2d8c0b59c9cc870d05420f9c76cea7c02e61632b" }
 ```
 
-Then build the grammar and link the queries:
+Then fetch and build the grammar, and link the queries from the fetched source
+so they stay in sync with the pinned revision:
 
 ```sh
+hx --grammar fetch
 hx --grammar build
 mkdir -p ~/.config/helix/runtime/queries
-ln -s /absolute/path/to/tree-sitter-mapfile/queries ~/.config/helix/runtime/queries/mapfile
+ln -s ~/.config/helix/runtime/grammars/sources/mapfile/queries ~/.config/helix/runtime/queries/mapfile
 hx --health mapfile
 ```
+
+To update, change `rev` to the commit of a newer
+[release tag](https://github.com/lnus/tree-sitter-mapfile/tags) and run the
+fetch and build commands again.
 
 ## Development
 

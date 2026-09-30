@@ -157,6 +157,9 @@ generic ones. Current mapping:
   `string_pair`, `num_pair`, `expression`, ...) so the two grammars can be
   compared side by side.
 - Every grammar fix gets a corpus test.
+- Releases are annotated `vX.Y.Z` tags, matching `metadata.version` in
+  `tree-sitter.json`. The README's Helix install pins `rev` to the tagged
+  commit's full hash (Helix wants a commit hash), so update it after tagging.
 - After a grammar change, run `tree-sitter test` and the full mappyfile corpus,
   and check that `hx-dev --health mapfile` still loads the queries. A query
   that names a node which no longer exists fails to load.
