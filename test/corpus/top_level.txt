@@ -1,0 +1,181 @@
+================================================================================
+Empty file
+================================================================================
+
+--------------------------------------------------------------------------------
+
+(source_file)
+
+================================================================================
+MAP
+================================================================================
+
+MAP
+  NAME "test"
+  EXTENT -180 -90 180 90
+  LAYER
+    NAME countries
+    STATUS ON
+  END
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (string))
+    (attr
+      (unquoted_string)
+      (extent
+        (int)
+        (int)
+        (int)
+        (int)))
+    (composite
+      (composite_type)
+      (attr
+        (unquoted_string)
+        (unquoted_string))
+      (attr
+        (unquoted_string)
+        (unquoted_string)))))
+
+================================================================================
+Keywords are case-insensitive
+================================================================================
+
+map
+  Layer
+    name "x"
+  eNd
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (composite
+      (composite_type)
+      (attr
+        (unquoted_string)
+        (string)))))
+
+================================================================================
+SYMBOLSET file
+================================================================================
+
+SYMBOLSET
+  SYMBOL
+    NAME "circle"
+    TYPE ellipse
+    FILLED true
+    POINTS 1 1 END
+  END
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (symbolset
+    (composite
+      (composite_type)
+      (attr
+        (unquoted_string)
+        (string))
+      (attr
+        (unquoted_string)
+        (unquoted_string))
+      (attr
+        (unquoted_string)
+        (true))
+      (points
+        (num_pair
+          (int)
+          (int))))))
+
+================================================================================
+CONFIG file
+================================================================================
+
+CONFIG
+  ENV
+    MS_MAP_PATTERN "^/opt/mapserver"
+    PROJ_LIB "/usr/share/proj"
+  END
+  MAPS
+    TEST "/opt/test.map"
+    LAYER /opt/layer.map
+  END
+  PLUGINS
+    "mssql" "/usr/lib/libmsplugin_mssql2008.so"
+  END
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (config_file
+    (env
+      (config_attr
+        (unquoted_string)
+        (string))
+      (config_attr
+        (unquoted_string)
+        (string)))
+    (maps
+      (config_attr
+        (unquoted_string)
+        (string))
+      (config_attr
+        (unquoted_string)
+        (path)))
+    (plugins
+      (config_attr
+        (string)
+        (string)))))
+
+================================================================================
+Partial mapfile: several CLASS blocks
+================================================================================
+
+CLASS
+  NAME "a"
+END
+CLASS
+  NAME "b"
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (string)))
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (string))))
+
+================================================================================
+Partial mapfile: bare attributes
+================================================================================
+
+NAME "included"
+STATUS ON
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (unquoted_string)))

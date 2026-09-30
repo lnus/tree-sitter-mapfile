@@ -1,0 +1,310 @@
+================================================================================
+STYLE block
+================================================================================
+
+CLASS
+  STYLE
+    COLOR 255 0 0
+    SYMBOL "circle"
+  END
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (composite
+      (composite_type)
+      (attr
+        (unquoted_string)
+        (rgb
+          (int)
+          (int)
+          (int)))
+      (attr
+        (unquoted_string)
+        (string)))))
+
+================================================================================
+STYLE attribute in QUERYMAP and SCALEBAR
+================================================================================
+
+QUERYMAP
+  STYLE HILITE
+END
+SCALEBAR
+  STYLE 1
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (style_mode)))
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (int))))
+
+================================================================================
+SYMBOL attribute
+================================================================================
+
+STYLE
+  SYMBOL "circle"
+  SYMBOL circle
+  SYMBOL 0
+  SYMBOL [sym]
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (string))
+    (attr
+      (unquoted_string)
+      (unquoted_string))
+    (attr
+      (unquoted_string)
+      (int))
+    (attr
+      (unquoted_string)
+      (attr_bind
+        (unquoted_string)))))
+
+================================================================================
+SYMBOL block
+================================================================================
+
+SYMBOL
+  TYPE vector
+  POINTS
+    0 0
+    1.5 1
+  END
+END
+SYMBOL
+  POINTS 0 0 END
+END
+SYMBOL
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (unquoted_string))
+    (points
+      (num_pair
+        (int)
+        (int))
+      (num_pair
+        (float)
+        (int))))
+  (composite
+    (composite_type)
+    (points
+      (num_pair
+        (int)
+        (int))))
+  (composite
+    (composite_type)))
+
+================================================================================
+Key/value blocks
+================================================================================
+
+WEB
+  METADATA
+    "wms_title" "Test"
+    wms_srs "EPSG:4326"
+  END
+  VALIDATION
+    "qstring" "^[a-z]+$"
+  END
+END
+LAYER
+  CONNECTIONOPTIONS
+    "FLATTEN_NESTED_ATTRIBUTES" "YES"
+  END
+END
+SCALETOKEN
+  NAME "%border%"
+  VALUES
+    "0" "ON"
+    "255000" "OFF"
+  END
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (metadata
+      (string_pair
+        (string)
+        (string))
+      (string_pair
+        (unquoted_string)
+        (string)))
+    (validation
+      (string_pair
+        (string)
+        (string))))
+  (composite
+    (composite_type)
+    (connectionoptions
+      (string_pair
+        (string)
+        (string))))
+  (composite
+    (composite_type)
+    (attr
+      (unquoted_string)
+      (string))
+    (values
+      (string_pair
+        (string)
+        (string))
+      (string_pair
+        (string)
+        (string)))))
+
+================================================================================
+PROJECTION
+================================================================================
+
+PROJECTION
+  "init=epsg:4326"
+END
+PROJECTION
+  "proj=utm"
+  "zone=15"
+END
+PROJECTION AUTO END
+PROJECTION END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (projection
+    (string))
+  (projection
+    (string)
+    (string))
+  (projection
+    (auto))
+  (projection))
+
+================================================================================
+PATTERN
+================================================================================
+
+STYLE
+  PATTERN 5 5 10 2.5 END
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (pattern
+      (num_pair
+        (int)
+        (int))
+      (num_pair
+        (int)
+        (float)))))
+
+================================================================================
+CONFIG inside MAP
+================================================================================
+
+MAP
+  CONFIG "MS_ERRORFILE" "stderr"
+  CONFIG MS_ERRORFILE stderr
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (config
+      (string)
+      (string))
+    (config
+      (unquoted_string)
+      (unquoted_string))))
+
+================================================================================
+INCLUDE
+================================================================================
+
+MAP
+  INCLUDE "layers.map"
+  INCLUDE 'symbols.map'
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (include
+      (string))
+    (include
+      (string))))
+
+================================================================================
+CLASSAUTO
+================================================================================
+
+LAYER
+  CLASSAUTO
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (composite
+    (composite_type)
+    (classauto)))
+
+================================================================================
+Comments
+================================================================================
+
+# leading comment
+MAP # trailing comment
+  /* block
+     comment */
+  NAME "x" /* inline */
+END
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (composite
+    (composite_type)
+    (comment)
+    (comment)
+    (attr
+      (unquoted_string)
+      (string))
+    (comment)))

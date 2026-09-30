@@ -1,0 +1,17 @@
+[
+  (composite)
+  (symbolset)
+  (config_file)
+  (env)
+  (maps)
+  (plugins)
+  (projection)
+  (points)
+  (pattern)
+  (values)
+  (metadata)
+  (validation)
+  (connectionoptions)
+] @indent
+
+"END" @outdent

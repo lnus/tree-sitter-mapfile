@@ -1,0 +1,266 @@
+================================================================================
+Comparison
+================================================================================
+
+EXPRESSION ([pop] > 1000)
+EXPRESSION ("[type]" eq "road")
+EXPRESSION ([name] ~* "^a")
+EXPRESSION ([name] IN "a,b,c")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (attr_bind
+          (unquoted_string))
+        (compare_op)
+        (int))))
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (string)
+        (compare_op)
+        (string))))
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (attr_bind
+          (unquoted_string))
+        (compare_op)
+        (string))))
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (attr_bind
+          (unquoted_string))
+        (compare_op)
+        (string)))))
+
+================================================================================
+Logical operators and precedence
+================================================================================
+
+EXPRESSION ([a] = 1 AND [b] = 2 OR [c] = 3)
+EXPRESSION ([a] = 1 && ([b] = 2 || [c] = 3))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (expression
+      (or_test
+        (and_test
+          (comparison
+            (attr_bind
+              (unquoted_string))
+            (compare_op)
+            (int))
+          (comparison
+            (attr_bind
+              (unquoted_string))
+            (compare_op)
+            (int)))
+        (comparison
+          (attr_bind
+            (unquoted_string))
+          (compare_op)
+          (int)))))
+  (attr
+    (unquoted_string)
+    (expression
+      (and_test
+        (comparison
+          (attr_bind
+            (unquoted_string))
+          (compare_op)
+          (int))
+        (expression
+          (or_test
+            (comparison
+              (attr_bind
+                (unquoted_string))
+              (compare_op)
+              (int))
+            (comparison
+              (attr_bind
+                (unquoted_string))
+              (compare_op)
+              (int))))))))
+
+================================================================================
+NOT
+================================================================================
+
+EXPRESSION (NOT [a] = 1 AND [b] = 2)
+EXPRESSION (!([a] = 1))
+EXPRESSION ([a] != 1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (expression
+      (and_test
+        (not_expression
+          (comparison
+            (attr_bind
+              (unquoted_string))
+            (compare_op)
+            (int)))
+        (comparison
+          (attr_bind
+            (unquoted_string))
+          (compare_op)
+          (int)))))
+  (attr
+    (unquoted_string)
+    (expression
+      (not_expression
+        (expression
+          (comparison
+            (attr_bind
+              (unquoted_string))
+            (compare_op)
+            (int))))))
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (attr_bind
+          (unquoted_string))
+        (compare_op)
+        (int)))))
+
+================================================================================
+Arithmetic
+================================================================================
+
+SIZE ([a] + 2 * [b] - 1)
+SIZE ([a] / 2 ^ 2)
+SIZE (-[a])
+SIZE ([a] - -1)
+SIZE ([a]-1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (expression
+      (sub
+        (add
+          (attr_bind
+            (unquoted_string))
+          (mul
+            (int)
+            (attr_bind
+              (unquoted_string))))
+        (int))))
+  (attr
+    (unquoted_string)
+    (expression
+      (power
+        (div
+          (attr_bind
+            (unquoted_string))
+          (int))
+        (int))))
+  (attr
+    (unquoted_string)
+    (expression
+      (neg
+        (attr_bind
+          (unquoted_string)))))
+  (attr
+    (unquoted_string)
+    (expression
+      (sub
+        (attr_bind
+          (unquoted_string))
+        (int))))
+  (attr
+    (unquoted_string)
+    (expression
+      (sub
+        (attr_bind
+          (unquoted_string))
+        (int)))))
+
+================================================================================
+Function calls
+================================================================================
+
+GEOMTRANSFORM (buffer([shape], 5))
+TEXT (tostring([area], "%.2f"))
+TEXT (commify(tostring([pop] / 1000, "%d")))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (expression
+      (func_call
+        (unquoted_string)
+        (func_params
+          (attr_bind
+            (unquoted_string))
+          (int)))))
+  (attr
+    (unquoted_string)
+    (expression
+      (func_call
+        (unquoted_string)
+        (func_params
+          (attr_bind
+            (unquoted_string))
+          (string)))))
+  (attr
+    (unquoted_string)
+    (expression
+      (func_call
+        (unquoted_string)
+        (func_params
+          (func_call
+            (unquoted_string)
+            (func_params
+              (div
+                (attr_bind
+                  (unquoted_string))
+                (int))
+              (string))))))))
+
+================================================================================
+Regex and runtime variable in expressions
+================================================================================
+
+EXPRESSION ([name] ~ /^a/)
+EXPRESSION ([id] = %id%)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (attr_bind
+          (unquoted_string))
+        (compare_op)
+        (regexp))))
+  (attr
+    (unquoted_string)
+    (expression
+      (comparison
+        (attr_bind
+          (unquoted_string))
+        (compare_op)
+        (runtime_var)))))

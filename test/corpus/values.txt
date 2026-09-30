@@ -1,0 +1,375 @@
+================================================================================
+Numbers
+================================================================================
+
+SIZE 8
+SIZE -8
+SIZE +8
+SIZE 1.5
+SIZE .5
+SIZE 1e5
+SIZE -2.5E-3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (int))
+  (attr
+    (unquoted_string)
+    (int))
+  (attr
+    (unquoted_string)
+    (int))
+  (attr
+    (unquoted_string)
+    (float))
+  (attr
+    (unquoted_string)
+    (float))
+  (attr
+    (unquoted_string)
+    (float))
+  (attr
+    (unquoted_string)
+    (float)))
+
+================================================================================
+Number groups
+================================================================================
+
+OFFSET 2 -2
+COLOR 255 0 0
+EXTENT -180 -90.0 180 90.0
+COLORRANGE 0 0 0 255 255 255
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (num_pair
+      (int)
+      (int)))
+  (attr
+    (unquoted_string)
+    (rgb
+      (int)
+      (int)
+      (int)))
+  (attr
+    (unquoted_string)
+    (extent
+      (int)
+      (float)
+      (int)
+      (float)))
+  (attr
+    (unquoted_string)
+    (colorrange
+      (int)
+      (int)
+      (int)
+      (int)
+      (int)
+      (int))))
+
+================================================================================
+Number followed by a word is an unquoted string
+================================================================================
+
+NAME 5abc
+NAME 1e5x
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (unquoted_string))
+  (attr
+    (unquoted_string)
+    (unquoted_string)))
+
+================================================================================
+Strings
+================================================================================
+
+NAME "double"
+NAME 'single'
+NAME `backtick`
+NAME "esc\"aped"
+NAME 'esc\'aped'
+NAME "multi
+line"
+EXPRESSION "caseless"i
+EXPRESSION 'caseless'i
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string)))
+
+================================================================================
+Hex colour vs. string
+================================================================================
+
+COLOR "#ff0000"
+COLOR '#f00'
+COLOR "#ff000080"
+COLOR "#ff00"
+COLOR "#gg0000"
+COLORRANGE "#000000" "#ffffff"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (hexcolor))
+  (attr
+    (unquoted_string)
+    (hexcolor))
+  (attr
+    (unquoted_string)
+    (hexcolor))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (string))
+  (attr
+    (unquoted_string)
+    (hexcolorrange
+      (hexcolor)
+      (hexcolor))))
+
+================================================================================
+Unquoted strings
+================================================================================
+
+STATUS ON
+UNITS dd
+PROJECTION_NAME epsg:4326
+NAME éàü
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (unquoted_string))
+  (attr
+    (unquoted_string)
+    (unquoted_string))
+  (attr
+    (unquoted_string)
+    (unquoted_string))
+  (attr
+    (unquoted_string)
+    (unquoted_string)))
+
+================================================================================
+Keywords as values
+================================================================================
+
+SIZE AUTO
+LABELCACHE TRUE
+TRANSPARENT false
+DATA NULL
+NAME class
+TYPE end_cap
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (auto))
+  (attr
+    (unquoted_string)
+    (true))
+  (attr
+    (unquoted_string)
+    (false))
+  (attr
+    (unquoted_string)
+    (null))
+  (attr
+    (unquoted_string)
+    (unquoted_string))
+  (attr
+    (unquoted_string)
+    (unquoted_string)))
+
+================================================================================
+Paths
+================================================================================
+
+SHAPEPATH ./data
+SHAPEPATH ../data
+DATA data/roads.shp
+DATA roads.shp
+FONTSET /usr/share/fonts.txt
+DRIVER AGG/PNG
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (path))
+  (attr
+    (unquoted_string)
+    (path))
+  (attr
+    (unquoted_string)
+    (path))
+  (attr
+    (unquoted_string)
+    (path))
+  (attr
+    (unquoted_string)
+    (path))
+  (attr
+    (unquoted_string)
+    (path)))
+
+================================================================================
+Regex vs. path
+================================================================================
+
+EXPRESSION /^foo/
+EXPRESSION /foo/i
+EXPRESSION /./
+EXPRESSION /a b/
+DATA /data/roads.shp
+EXPRESSION \\foo\\
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (regexp))
+  (attr
+    (unquoted_string)
+    (regexp))
+  (attr
+    (unquoted_string)
+    (regexp))
+  (attr
+    (unquoted_string)
+    (regexp))
+  (attr
+    (unquoted_string)
+    (path))
+  (attr
+    (unquoted_string)
+    (regexp)))
+
+================================================================================
+Runtime variables
+================================================================================
+
+DATA %path%
+FILTER %filter%
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (runtime_var))
+  (attr
+    (unquoted_string)
+    (runtime_var)))
+
+================================================================================
+Attribute bindings
+================================================================================
+
+SIZE [size]
+ANGLE [angle] 5
+OFFSET 2 [y]
+OFFSET [x] [y]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (attr_bind
+      (unquoted_string)))
+  (attr
+    (unquoted_string)
+    (attr_mixed_pair
+      (attr_bind
+        (unquoted_string))
+      (int)))
+  (attr
+    (unquoted_string)
+    (attr_mixed_pair
+      (int)
+      (attr_bind
+        (unquoted_string))))
+  (attr
+    (unquoted_string)
+    (attr_bind_pair
+      (attr_bind
+        (unquoted_string))
+      (attr_bind
+        (unquoted_string)))))
+
+================================================================================
+Lists
+================================================================================
+
+EXPRESSION {1,2,3}
+EXPRESSION {"a","b"}
+EXPRESSION {Main Street,O'Connell Street}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attr
+    (unquoted_string)
+    (list
+      (int)
+      (int)
+      (int)))
+  (attr
+    (unquoted_string)
+    (list
+      (string)
+      (string)))
+  (attr
+    (unquoted_string)
+    (list
+      (unquoted_string_space)
+      (unquoted_string_space))))

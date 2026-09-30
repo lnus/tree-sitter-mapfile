@@ -1,0 +1,10 @@
+.direnv
+
+# Grammar build artifacts
+*.so
+*.dylib
+*.dll
+*.wasm
+*.o
+*.obj
+build/
