@@ -4,7 +4,8 @@
  * @license MIT
  *
  * Ported from mappyfile's Lark grammar (mappyfile/mapfile.lark). Node names
- * follow the Lark rule names where possible.
+ * follow the Lark rule names where possible. mappyfile is MIT-licensed,
+ * Copyright (c) 2017 Seth Girvin; see THIRD-PARTY-NOTICES.md.
  */
 
 /// <reference types="tree-sitter-cli/dsl" />

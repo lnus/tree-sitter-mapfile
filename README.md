@@ -35,7 +35,7 @@ flake. Then it starts Helix with that config dir. You don't need
 
 ```sh
 nix develop          # or: direnv allow
-hx-dev examples/itasca2.map
+hx-dev examples/centerline.map
 hx-dev --health mapfile
 ```
 
@@ -85,4 +85,8 @@ tree-sitter parse file.map                          # print the tree for one fil
 ## Credits
 
 - [mappyfile](https://github.com/geographika/mappyfile) by Seth Girvin (MIT):
-  the reference grammar and the sample files in `examples/`.
+  the reference grammar and the `.sym` and `.cfg` samples in `examples/`.
+- [MapServer](https://github.com/MapServer/MapServer) (MIT-style): the `.map`
+  samples in `examples/`, from its msautotest suite.
+
+The license texts are in [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).

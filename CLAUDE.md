@@ -42,7 +42,8 @@ queries/folds.scm        # BLOCK ... END (Helix doesn't fold yet; for other edit
 queries/indents.scm
 queries/textobjects.scm  # blocks = @class, func calls = @function
 test/corpus/*.txt        # tree-sitter test cases
-examples/                # larger sample files from mappyfile (see its README)
+examples/                # sample files from mappyfile and MapServer (see its README)
+THIRD-PARTY-NOTICES.md   # licenses for the mappyfile port and the copied examples
 flake.nix                # dev shell: tree-sitter, node, cc, hx-dev
 ```
 
