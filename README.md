@@ -25,6 +25,26 @@ mappyfile itself.
 The `queries/` directory has `highlights.scm`, `indents.scm`,
 `textobjects.scm` and `folds.scm`, using Helix's capture names.
 
+### Nix (flake)
+
+The flake exports what a Nix-managed Helix config needs:
+
+- `packages.<system>.default`: the built grammar (`parser` and `queries/`).
+- `packages.<system>.helix-runtime`: `grammars/mapfile.so` and
+  `queries/mapfile/`, laid out like a Helix runtime dir.
+- `lib.helixLanguage`: the `[[language]]` entry as a Nix attrset.
+
+```nix
+inputs.tree-sitter-mapfile = {
+  url = "github:lnus/tree-sitter-mapfile/v0.1.1";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
+```
+
+Link `helix-runtime`'s `grammars/mapfile.so` and `queries/mapfile` into
+`<helix config dir>/runtime/`, and add `lib.helixLanguage` to the `language`
+list of your `languages.toml`.
+
 ### Nix (development)
 
 The flake's dev shell has `tree-sitter` and an `hx-dev` command. `hx-dev`
@@ -41,7 +61,7 @@ hx-dev --health mapfile
 
 `hx-dev` rebuilds the grammar when `src/parser.c` changes. Query edits apply
 when you reopen a file. Helix runs with its default settings, not your own
-config. The language settings are in `flake.nix`.
+config. The language settings are `lib.helixLanguage` in `flake.nix`.
 
 ### Regular install
 

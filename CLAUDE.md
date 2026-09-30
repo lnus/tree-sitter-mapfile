@@ -44,7 +44,7 @@ queries/textobjects.scm  # blocks = @class, func calls = @function
 test/corpus/*.txt        # tree-sitter test cases
 examples/                # sample files from mappyfile and MapServer (see its README)
 THIRD-PARTY-NOTICES.md   # licenses for the mappyfile port and the copied examples
-flake.nix                # dev shell: tree-sitter, node, cc, hx-dev
+flake.nix                # grammar package, helix-runtime, lib.helixLanguage; dev shell with hx-dev
 ```
 
 ## Commands
@@ -128,8 +128,10 @@ On NixOS, `hx --grammar build` can't write to the store runtime. Use
   repo. It compiles `mapfile.so` into `runtime/grammars/` there when
   `src/parser.c` is newer, and symlinks `queries/` in as
   `runtime/queries/mapfile`.
-- The language entry (file types, comments, indent) is `languagesToml` in
-  `flake.nix`, generated with `pkgs.formats.toml`. There's no `config.toml`, so Helix
+- The language entry (file types, comments, indent) is `lib.helixLanguage` in
+  `flake.nix`. `hx-dev` turns it into a `languages.toml` with `pkgs.formats.toml`,
+  and Nix consumers (the user's `~/nix` Helix wrapper) import it directly, so
+  change it there only. There's no `config.toml`, so Helix
   runs with default settings. (The user configures Helix through a Nix wrapper
   module, not `~/.config/helix`.)
 - It runs nixpkgs' Helix with `XDG_CONFIG_HOME` pointing there. Helix searches
@@ -137,6 +139,11 @@ On NixOS, `hx --grammar build` can't write to the store runtime. Use
   work.
 - Check it with `hx-dev --health mapfile`. The parser and all three query
   kinds should show ✓.
+
+`hx-dev` builds from the working tree. The flake's `packages` (`default` =
+`buildGrammar` output, `helix-runtime` = a Helix-shaped runtime dir) build from
+`src/`, `queries/` and `tree-sitter.json` only, and take the version from
+`tree-sitter.json`. `nix build .#helix-runtime` is the quick check for them.
 
 The regular (non-Nix) install is in the README.
 
@@ -160,6 +167,10 @@ generic ones. Current mapping:
 - Releases are annotated `vX.Y.Z` tags, matching `metadata.version` in
   `tree-sitter.json`. The README's Helix install pins `rev` to the tagged
   commit's full hash (Helix wants a commit hash), so update it after tagging.
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/):
+  `<type>(<optional scope>): <subject>`, e.g. `feat(nix): export helix runtime`,
+  `fix(grammar): allow floats in extent`, `docs: ...`. Types: `feat`, `fix`,
+  `docs`, `test`, `refactor`, `chore`, `build`. Older commits predate this.
 - After a grammar change, run `tree-sitter test` and the full mappyfile corpus,
   and check that `hx-dev --health mapfile` still loads the queries. A query
   that names a node which no longer exists fails to load.
