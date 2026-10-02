@@ -192,8 +192,10 @@ minimal `init.lua` that clones nvim-treesitter's `main` branch and uses
   compared side by side.
 - Every grammar fix gets a corpus test.
 - Releases are annotated `vX.Y.Z` tags, matching `metadata.version` in
-  `tree-sitter.json`. The README's Helix install pins `rev` to the tagged
-  commit's full hash (Helix wants a commit hash), so update it after tagging.
+  `tree-sitter.json` (run `tree-sitter generate` after bumping it; `src/parser.c`
+  embeds the version). The README pins the Helix `rev`, the Neovim `revision`
+  and the flake URL to the tag; Helix wants the full commit hash. Tag the bump
+  commit, then pin the README in a follow-up `docs:` commit.
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/):
   `<type>(<optional scope>): <subject>`, e.g. `feat(nix): export helix runtime`,
   `fix(grammar): allow floats in extent`, `docs: ...`. Types: `feat`, `fix`,
