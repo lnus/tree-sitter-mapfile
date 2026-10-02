@@ -12,7 +12,7 @@
     }
   ],
   "metadata": {
-    "version": "0.1.1",
+    "version": "0.2.0",
     "license": "MIT",
     "description": "MapServer Mapfile grammar for tree-sitter",
     "authors": [{ "name": "Linus Wæhler", "email": "17277861+lnus@users.noreply.github.com" }]
