@@ -143,6 +143,10 @@ vim.api.nvim_create_autocmd('FileType', {
 
 Then run `:TSInstall mapfile`. `:TSUpdate mapfile` updates it later.
 
+[LazyVim](https://www.lazyvim.org/) and similar distros already turn on
+highlighting, folds and indents for installed parsers, so there you only need
+the `TSUpdate` registration, `vim.filetype.add` and `language.register`.
+
 The textobjects are for
 [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects):
 blocks (`MAP`, `LAYER`, `CLASS`, `METADATA`, …) are `@class.outer` and
