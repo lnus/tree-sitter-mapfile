@@ -1,13 +1,13 @@
 # tree-sitter-mapfile
 
 > [!NOTE]
-> This project is AI-written. Claude (Opus 5.5) wrote the grammar, queries,
-> tests and docs in Claude Code, and I tested the result in Helix. It's a
+> This project is AI-assisted. Claude (Opus 5.5) wrote most of it in Claude
+> Code, I made my own changes on top, and I tested the result in Helix. It's a
 > personal project with no guarantees. Issues and PRs are welcome.
 
 A [tree-sitter](https://tree-sitter.github.io/) grammar for MapServer
-[Mapfiles](https://mapserver.org/mapfile/), mainly for syntax highlighting in
-[Helix](https://helix-editor.com/). It is ported from the Lark grammar in
+[Mapfiles](https://mapserver.org/mapfile/), for syntax highlighting in
+[Helix](https://helix-editor.com/) and [Neovim](https://neovim.io/). It is ported from the Lark grammar in
 [mappyfile](https://github.com/geographika/mappyfile) (`mappyfile/mapfile.lark`)
 and keeps its rule names.
 
@@ -97,6 +97,82 @@ hx --health mapfile
 To update, change `rev` to the commit of a newer
 [release tag](https://github.com/lnus/tree-sitter-mapfile/tags) and run the
 fetch and build commands again.
+
+## Neovim
+
+`queries/neovim/` has `highlights.scm`, `folds.scm`, `indents.scm` and
+`textobjects.scm`, using Neovim's capture names. The files directly in
+`queries/` are for Helix and use different names.
+
+Neovim already detects `.map` files as the `map` filetype, so the parser only
+has to be registered for it.
+
+### nvim-treesitter
+
+With the `main` branch of
+[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) (Neovim
+0.12+), register the parser in your config:
+
+```lua
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'TSUpdate',
+  callback = function()
+    require('nvim-treesitter.parsers').mapfile = {
+      install_info = {
+        url = 'https://github.com/lnus/tree-sitter-mapfile',
+        -- revision = '<commit hash>', -- optional: pin a release, default is HEAD
+        queries = 'queries/neovim',
+      },
+    }
+  end,
+})
+
+vim.filetype.add({ extension = { sym = 'map' } }) -- SYMBOLSET files
+vim.treesitter.language.register('mapfile', { 'map' })
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'map',
+  callback = function()
+    vim.treesitter.start()
+    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.wo[0][0].foldmethod = 'expr'
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
+```
+
+Then run `:TSInstall mapfile`. `:TSUpdate mapfile` updates it later.
+
+The textobjects are for
+[nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects):
+blocks (`MAP`, `LAYER`, `CLASS`, `METADATA`, …) are `@class.outer` and
+`@class.inner`, function calls in expressions are `@call.outer` and
+`@call.inner`, and there are `@parameter.inner`, `@comment.inner` and
+`@comment.outer`. Map them to keys as usual, for example:
+
+```lua
+local select = require('nvim-treesitter-textobjects.select')
+vim.keymap.set({ 'x', 'o' }, 'ac', function() select.select_textobject('@class.outer', 'textobjects') end)
+vim.keymap.set({ 'x', 'o' }, 'ic', function() select.select_textobject('@class.inner', 'textobjects') end)
+```
+
+### Without nvim-treesitter
+
+Neovim can load the parser and queries on its own. Build the parser into
+`parser/` on your `runtimepath` and copy the queries to `queries/mapfile/`:
+
+```sh
+git clone https://github.com/lnus/tree-sitter-mapfile
+cd tree-sitter-mapfile
+site=~/.local/share/nvim/site
+mkdir -p "$site/parser" "$site/queries"
+tree-sitter build -o "$site/parser/mapfile.so"
+cp -r queries/neovim "$site/queries/mapfile"
+```
+
+Keep the `vim.filetype.add`, `language.register` and `FileType` autocmd from
+above, but drop the `indentexpr` line. Tree-sitter indentation comes from
+nvim-treesitter, while highlighting and folding work without it.
 
 ## Development
 

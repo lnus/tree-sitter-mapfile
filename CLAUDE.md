@@ -3,12 +3,13 @@
 A tree-sitter grammar for MapServer Mapfiles. It is ported from the Lark grammar
 in [mappyfile](https://github.com/geographika/mappyfile) (`mappyfile/mapfile.lark`).
 
-The project is AI-written, and the README says so. Keep that note accurate if
-the README changes.
+The project is AI-assisted (mostly written by Claude, with manual changes on
+top), and the README says so. Keep that note accurate if the README changes.
 
 ## Goal
 
-Syntax highlighting (plus folding, indents and textobjects) in Helix.
+Syntax highlighting (plus folding, indents and textobjects) in Helix, and in
+Neovim through a second query set in `queries/neovim/`.
 
 The grammar can be **looser than Lark's**. Tree-sitter's error
 recovery covers edge cases, so don't encode validation rules (which keys are
@@ -41,6 +42,7 @@ queries/highlights.scm   # Helix capture names (see below)
 queries/folds.scm        # BLOCK ... END (Helix doesn't fold yet; for other editors)
 queries/indents.scm
 queries/textobjects.scm  # blocks = @class, func calls = @function
+queries/neovim/*.scm     # same four for Neovim (nvim capture names; see below)
 test/corpus/*.txt        # tree-sitter test cases
 examples/                # sample files from mappyfile and MapServer (see its README)
 THIRD-PARTY-NOTICES.md   # licenses for the mappyfile port and the copied examples
@@ -158,6 +160,31 @@ generic ones. Current mapping:
 `punctuation.delimiter`, `comment`, `variable` (`[attr]` bindings,
 `%runtime%` vars).
 
+## Neovim integration
+
+`queries/neovim/` mirrors the four Helix queries with Neovim's capture names.
+Keep the two sets in sync when a query changes. nvim-treesitter (main branch)
+installs them through `install_info.queries = 'queries/neovim'` (see the
+README). Differences:
+
+- In Neovim **the last matching pattern wins**, so `highlights.scm` is in
+  reverse order: generic patterns first, keys and specific patterns last.
+- Highlight names: `property` (keys), `number` / `number.float`, `boolean`,
+  `constant.builtin` (`NULL`, `AUTO`), `keyword.operator` (`AND`/`OR`/`NOT`),
+  `keyword.import` (`INCLUDE`), `function.call`, `comment @spell`.
+- Indents: `@indent.begin` on blocks, `"END" @indent.branch @indent.end`.
+  These need nvim-treesitter's `indentexpr`.
+- Textobjects: `.outer`/`.inner` instead of `.around`/`.inside`, and function
+  calls are `@call` (nvim-treesitter-textobjects' name).
+- Neovim's built-in filetype for `.map` is `map`; the README registers
+  `mapfile` for it and maps `.sym` to it too.
+
+To test without touching the user's config, run Neovim from nixpkgs
+(`nix shell nixpkgs#neovim`) with `XDG_*_HOME` pointed at a scratch dir and a
+minimal `init.lua` that clones nvim-treesitter's `main` branch and uses
+`install_info.path` for the local checkout. A flattened file reindented with
+`gg=G` should match the original.
+
 ## Conventions
 
 - Keep node names close to the Lark rule names (`composite`, `attr`,
@@ -173,4 +200,6 @@ generic ones. Current mapping:
   `docs`, `test`, `refactor`, `chore`, `build`. Older commits predate this.
 - After a grammar change, run `tree-sitter test` and the full mappyfile corpus,
   and check that `hx-dev --health mapfile` still loads the queries. A query
-  that names a node which no longer exists fails to load.
+  that names a node which no longer exists fails to load. The same goes for
+  `queries/neovim/`: `tree-sitter query queries/neovim/highlights.scm file.map`
+  fails on a bad node name.
