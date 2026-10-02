@@ -46,7 +46,7 @@ queries/neovim/*.scm     # same four for Neovim (nvim capture names; see below)
 test/corpus/*.txt        # tree-sitter test cases
 examples/                # sample files from mappyfile and MapServer (see its README)
 THIRD-PARTY-NOTICES.md   # licenses for the mappyfile port and the copied examples
-flake.nix                # grammar package, helix-runtime, lib.helixLanguage; dev shell with hx-dev
+flake.nix                # grammar package, helix-runtime, neovim-plugin, lib.helixLanguage; dev shell with hx-dev and nvim-dev
 ```
 
 ## Commands
@@ -59,6 +59,7 @@ tree-sitter parse file.map     # print the tree for one file
 tree-sitter parse --paths <list-of-mappyfile-maps> --quiet --stat   # full corpus
 tree-sitter query queries/highlights.scm file.map   # which capture each node gets
 hx-dev file.map                # Helix with this grammar (see below)
+nvim-dev file.map              # Neovim with this grammar, nvim-treesitter and textobjects
 ```
 
 To fill in a new corpus test, write the input with an empty tree, run
@@ -143,7 +144,8 @@ On NixOS, `hx --grammar build` can't write to the store runtime. Use
   kinds should show ✓.
 
 `hx-dev` builds from the working tree. The flake's `packages` (`default` =
-`buildGrammar` output, `helix-runtime` = a Helix-shaped runtime dir) build from
+`buildGrammar` output, `helix-runtime` = a Helix-shaped runtime dir,
+`neovim-plugin` = a runtimepath dir with the Neovim queries) build from
 `src/`, `queries/` and `tree-sitter.json` only, and take the version from
 `tree-sitter.json`. `nix build .#helix-runtime` is the quick check for them.
 
@@ -179,10 +181,12 @@ README). Differences:
 - Neovim's built-in filetype for `.map` is `map`; the README registers
   `mapfile` for it and maps `.sym` to it too.
 
-To test without touching the user's config, run Neovim from nixpkgs
-(`nix shell nixpkgs#neovim`) with `XDG_*_HOME` pointed at a scratch dir and a
-minimal `init.lua` that clones nvim-treesitter's `main` branch and uses
-`install_info.path` for the local checkout. A flattened file reindented with
+`nvim-dev` (in `flake.nix`) works like `hx-dev`: config dir
+`~/.cache/tree-sitter-mapfile/xdg/nvim/` with `parser/mapfile.so`, a
+`queries/mapfile` symlink to `queries/neovim/`, and a generated `init.lua` that
+loads nixpkgs' nvim-treesitter and nvim-treesitter-textobjects (both on
+`main`). To test headless, point `XDG_CACHE_HOME` at a scratch dir and run
+`nvim-dev --headless file.map -c ...`. A flattened file reindented with
 `gg=G` should match the original.
 
 ## Conventions

@@ -174,6 +174,34 @@ Keep the `vim.filetype.add`, `language.register` and `FileType` autocmd from
 above, but drop the `indentexpr` line. Tree-sitter indentation comes from
 nvim-treesitter, while highlighting and folding work without it.
 
+### Nix (flake)
+
+`packages.<system>.neovim-plugin` has `parser/mapfile.so` and
+`queries/mapfile/` (the Neovim queries), so it works as a plugin wherever your
+Nix config takes one, with no `:TSInstall`:
+
+```nix
+programs.neovim.plugins = [
+  inputs.tree-sitter-mapfile.packages.${pkgs.stdenv.hostPlatform.system}.neovim-plugin
+];
+```
+
+Add the `vim.filetype.add`, `language.register` and `FileType` autocmd from
+above. The `indentexpr` line needs nvim-treesitter.
+
+### Nix (development)
+
+The dev shell also has `nvim-dev`, which works like `hx-dev`: it builds the
+grammar into `~/.cache/tree-sitter-mapfile/`, links `queries/neovim/` in, and
+starts Neovim with a minimal config instead of yours. That config enables
+highlighting, folding and indentation, and maps the textobjects to `ac`/`ic`
+(blocks) and `af`/`if` (function calls). nvim-treesitter and
+nvim-treesitter-textobjects come from nixpkgs.
+
+```sh
+nvim-dev examples/centerline.map
+```
+
 ## Development
 
 ```sh

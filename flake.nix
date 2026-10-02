@@ -12,15 +12,14 @@
       lib.genAttrs ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"]
       (system: f nixpkgs.legacyPackages.${system});
 
-    # Only what the build needs, so README or test edits don't rebuild the grammar.
+    # Only the build inputs, so doc edits don't rebuild the grammar.
     grammarSrc = lib.fileset.toSource {
       root = ./.;
       fileset = lib.fileset.unions [./src ./queries ./tree-sitter.json];
     };
     version = (lib.importJSON ./tree-sitter.json).metadata.version;
   in {
-    # Helix `[[language]]` entry. Plain data, so consumers can put it straight
-    # into their own languages.toml.
+    # Helix `[[language]]` entry.
     lib.helixLanguage = {
       name = "mapfile";
       scope = "source.mapfile";
@@ -39,14 +38,13 @@
     };
 
     packages = forAllSystems (pkgs: rec {
-      # $out/parser (the shared library) and $out/queries/.
+      # $out/parser and $out/queries/.
       default = pkgs.tree-sitter.buildGrammar {
         language = "mapfile";
         inherit version;
         src = grammarSrc;
       };
 
-      # Laid out like a Helix runtime dir: grammars/mapfile.so and queries/mapfile/.
       helix-runtime = pkgs.linkFarm "mapfile-helix-runtime" [
         {
           name = "grammars/mapfile.so";
@@ -55,6 +53,18 @@
         {
           name = "queries/mapfile";
           path = "${default}/queries";
+        }
+      ];
+
+      # A runtimepath dir, usable as a Neovim plugin.
+      neovim-plugin = pkgs.linkFarm "mapfile-neovim-plugin" [
+        {
+          name = "parser/mapfile.so";
+          path = "${default}/parser";
+        }
+        {
+          name = "queries/mapfile";
+          path = "${default}/queries/neovim";
         }
       ];
     });
@@ -66,9 +76,14 @@
         language = [self.lib.helixLanguage];
       };
 
-      # Helix with the working tree's grammar and queries. `hx --grammar build`
-      # can't write to the store runtime, so hx-dev uses its own config dir in
-      # ~/.cache. Helix searches <config dir>/runtime before $HELIX_RUNTIME.
+      # The dev commands run the working tree's grammar and queries from a
+      # config dir in ~/.cache, since the store runtime is read-only.
+      buildParser = so: ''
+        if [ ! -e "${so}" ] || [ "$root/src/parser.c" -nt "${so}" ]; then
+          tree-sitter build -o "${so}" "$root"
+        fi
+      '';
+
       hx-dev = pkgs.writeShellApplication {
         name = "hx-dev";
         runtimeInputs = with pkgs; [git helix stdenv.cc tree-sitter];
@@ -80,22 +95,61 @@
           mkdir -p "$cfg/runtime/grammars" "$cfg/runtime/queries"
           ln -sfn ${languagesToml} "$cfg/languages.toml"
           ln -sfn "$root/queries" "$cfg/runtime/queries/mapfile"
-
-          so="$cfg/runtime/grammars/mapfile.so"
-          if [ ! -e "$so" ] || [ "$root/src/parser.c" -nt "$so" ]; then
-            tree-sitter build -o "$so" "$root"
-          fi
+          ${buildParser "$cfg/runtime/grammars/mapfile.so"}
 
           XDG_CONFIG_HOME="$xdg" exec hx "$@"
         '';
       };
+
+      nvimInit = pkgs.writeText "init.lua" ''
+        vim.opt.rtp:append({
+          '${pkgs.vimPlugins.nvim-treesitter}',
+          '${pkgs.vimPlugins.nvim-treesitter-textobjects}',
+        })
+
+        vim.filetype.add({ extension = { sym = 'map' } })
+        vim.treesitter.language.register('mapfile', { 'map' })
+
+        vim.api.nvim_create_autocmd('FileType', {
+          pattern = 'map',
+          callback = function()
+            vim.treesitter.start()
+            vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            vim.wo[0][0].foldmethod = 'expr'
+            vim.wo[0][0].foldlevel = 99
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end,
+        })
+
+        local select = require('nvim-treesitter-textobjects.select')
+        for keys, obj in pairs({ ac = '@class.outer', ic = '@class.inner', af = '@call.outer', ['if'] = '@call.inner' }) do
+          vim.keymap.set({ 'x', 'o' }, keys, function() select.select_textobject(obj, 'textobjects') end)
+        end
+      '';
+
+      nvim-dev = pkgs.writeShellApplication {
+        name = "nvim-dev";
+        runtimeInputs = with pkgs; [git neovim stdenv.cc tree-sitter];
+        text = ''
+          root=$(git rev-parse --show-toplevel)
+          xdg="''${XDG_CACHE_HOME:-$HOME/.cache}/tree-sitter-mapfile/xdg"
+          cfg="$xdg/nvim"
+
+          mkdir -p "$cfg/parser" "$cfg/queries"
+          ln -sfn ${nvimInit} "$cfg/init.lua"
+          ln -sfn "$root/queries/neovim" "$cfg/queries/mapfile"
+          ${buildParser "$cfg/parser/mapfile.so"}
+
+          XDG_CONFIG_HOME="$xdg" exec nvim "$@"
+        '';
+      };
     in {
-      # mkShell's stdenv provides the C compiler that `tree-sitter test`/`parse` need.
       default = pkgs.mkShell {
         packages = with pkgs; [
           tree-sitter
-          nodejs # `tree-sitter generate` evaluates grammar.js with node
+          nodejs # for `tree-sitter generate`
           hx-dev
+          nvim-dev
         ];
       };
     });
