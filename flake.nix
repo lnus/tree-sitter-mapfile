@@ -150,7 +150,16 @@
           nodejs # for `tree-sitter generate`
           hx-dev
           nvim-dev
+          # for the Rust bindings
+          cargo
+          rustc
+          clippy
+          rustfmt
+          rust-analyzer
         ];
+        RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
+        # Debug builds of src/parser.c warn about _FORTIFY_SOURCE without -O.
+        hardeningDisable = ["fortify"];
       };
     });
   };

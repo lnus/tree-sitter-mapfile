@@ -8,3 +8,7 @@
 *.o
 *.obj
 build/
+
+# Rust bindings
+target/
+Cargo.lock

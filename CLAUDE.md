@@ -43,6 +43,7 @@ queries/folds.scm        # BLOCK ... END (Helix doesn't fold yet; for other edit
 queries/indents.scm
 queries/textobjects.scm  # blocks = @class, func calls = @function
 queries/neovim/*.scm     # same four for Neovim (nvim capture names; see below)
+Cargo.toml, bindings/rust/  # Rust crate (from `tree-sitter init`; exports LANGUAGE, HIGHLIGHTS_QUERY, INDENTS_QUERY); not published, used by mapfmt
 test/corpus/*.txt        # tree-sitter test cases
 examples/                # sample files from mappyfile and MapServer (see its README)
 THIRD-PARTY-NOTICES.md   # licenses for the mappyfile port and the copied examples
@@ -58,6 +59,7 @@ tree-sitter parse examples/*.{map,sym,cfg} --quiet --stat   # count files that f
 tree-sitter parse file.map     # print the tree for one file
 tree-sitter parse --paths <list-of-mappyfile-maps> --quiet --stat   # full corpus
 tree-sitter query queries/highlights.scm file.map   # which capture each node gets
+cargo test                     # Rust bindings: grammar loads, exported queries compile
 hx-dev file.map                # Helix with this grammar (see below)
 nvim-dev file.map              # Neovim with this grammar, nvim-treesitter and textobjects
 ```

@@ -213,6 +213,7 @@ tree-sitter generate                                # after every grammar.js cha
 tree-sitter test                                    # corpus tests in test/corpus/
 tree-sitter parse examples/*.{map,sym,cfg} --quiet --stat
 tree-sitter parse file.map                          # print the tree for one file
+cargo test                                          # Rust bindings (toolchain is in the dev shell)
 ```
 
 `CLAUDE.md` has the porting notes (Lark → tree-sitter) and the conventions.

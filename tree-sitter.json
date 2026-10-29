@@ -15,14 +15,15 @@
     "version": "0.2.1",
     "license": "MIT",
     "description": "MapServer Mapfile grammar for tree-sitter",
-    "authors": [{ "name": "Linus Wæhler", "email": "17277861+lnus@users.noreply.github.com" }]
+    "authors": [{ "name": "Linus Wæhler", "email": "17277861+lnus@users.noreply.github.com" }],
+    "links": { "repository": "https://github.com/lnus/tree-sitter-mapfile" }
   },
   "bindings": {
     "c": false,
     "go": false,
     "node": false,
     "python": false,
-    "rust": false,
+    "rust": true,
     "swift": false,
     "zig": false
   }
