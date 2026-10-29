@@ -36,7 +36,7 @@ The flake exports what a Nix-managed Helix config needs:
 
 ```nix
 inputs.tree-sitter-mapfile = {
-  url = "github:lnus/tree-sitter-mapfile/v0.2.1";
+  url = "github:lnus/tree-sitter-mapfile/v0.3.0";
   inputs.nixpkgs.follows = "nixpkgs";
 };
 ```
@@ -79,8 +79,8 @@ grammar = "mapfile"
 
 [[grammar]]
 name = "mapfile"
-# v0.2.1
-source = { git = "https://github.com/lnus/tree-sitter-mapfile", rev = "c3ee5648d48bf1cd3094cabdcd692e6a518294e9" }
+# v0.3.0
+source = { git = "https://github.com/lnus/tree-sitter-mapfile", rev = "70979b9cd79fd87649fcc0e567ba8ed3d68ae78c" }
 ```
 
 Then fetch and build the grammar, and link the queries from the fetched source
@@ -120,7 +120,7 @@ vim.api.nvim_create_autocmd('User', {
     require('nvim-treesitter.parsers').mapfile = {
       install_info = {
         url = 'https://github.com/lnus/tree-sitter-mapfile',
-        revision = 'c3ee5648d48bf1cd3094cabdcd692e6a518294e9', -- v0.2.1; leave out to track HEAD
+        revision = '70979b9cd79fd87649fcc0e567ba8ed3d68ae78c', -- v0.3.0; leave out to track HEAD
         queries = 'queries/neovim',
       },
     }
